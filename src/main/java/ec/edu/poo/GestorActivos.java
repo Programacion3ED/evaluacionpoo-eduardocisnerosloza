@@ -8,43 +8,80 @@ public class GestorActivos {
     private int contador;
 
     public GestorActivos() {
-        // TODO: inicializar arreglo y contador
+        this.activos = new ActivoDigital[MAX_ACTIVOS];
+        this.contador = 0;
     }
 
     public void reiniciar() {
-        // TODO: reiniciar arreglo y contador
+        this.activos = new ActivoDigital[MAX_ACTIVOS];
+        this.contador = 0;
     }
 
     public boolean registrarActivo(ActivoDigital activo) {
-        // TODO: registrar si hay espacio y si el código no existe
-        return false;
+        // Validar que no se exceda el límite
+        if (this.contador >= MAX_ACTIVOS) {
+            return false;
+        }
+
+        // Validar que no exista un activo con el mismo código
+        if (buscarPorCodigo(activo.getCodigo()) != null) {
+            return false;
+        }
+
+        // Registrar activo
+        this.activos[this.contador] = activo;
+        this.contador++;
+        return true;
     }
 
     public ActivoDigital buscarPorCodigo(String codigo) {
-        // TODO: búsqueda secuencial por código
+        for (int i = 0; i < this.contador; i++) {
+            if (this.activos[i].getCodigo().equals(codigo)) {
+                return this.activos[i];
+            }
+        }
         return null;
     }
 
     public int contarActivosCriticos() {
-        // TODO: contar activos con nivelRiesgo >= 8
-        return 0;
+        int criticos = 0;
+        for (int i = 0; i < this.contador; i++) {
+            if (this.activos[i].getNivelRiesgo() >= 8) {
+                criticos++;
+            }
+        }
+        return criticos;
     }
 
     public double calcularPromedioRiesgo() {
-        // TODO: calcular promedio de riesgo
-        return 0;
+        if (this.contador == 0) {
+            return 0.0;
+        }
+
+        double sumaRiesgos = 0;
+        for (int i = 0; i < this.contador; i++) {
+            sumaRiesgos += this.activos[i].getNivelRiesgo();
+        }
+
+        return sumaRiesgos / this.contador;
     }
 
     public boolean aplicarParcheActivo(String codigo) {
-        // TODO: buscar activo y cambiar parcheAplicado a true
+        ActivoDigital activo = buscarPorCodigo(codigo);
+
+        if (activo != null) {
+            activo.setParcheAplicado(true);
+            return true;
+        }
+
         return false;
     }
 
     public int obtenerCantidadActivos() {
-        return contador;
+        return this.contador;
     }
 
     public ActivoDigital[] obtenerActivos() {
-        return activos;
+        return this.activos;
     }
 }
